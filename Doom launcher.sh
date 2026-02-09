@@ -52,22 +52,21 @@ if [ ! "$(ls -A $IWAD_DIR/*.wad 2>/dev/null)" ]; then
                     unzip -j fd.zip "*.wad" -d "$IWAD_DIR/" && rm fd.zip
                     ;;
             esac
-            echo -e "${GREEN}Freedoom is good to go. If it glitched ou, just Googleit and drop the WADs in the folder manually.${NC}"
+            echo -e "${GREEN}Freedoom is ready to go!${NC}"
         fi
     fi
 fi
 
 # --- WELCOME BANNER ---
 echo -e "${RED}========================================${NC}"
-echo -e "${YELLOW}         GZDoom for Linux         ${NC}"
+echo -e "${YELLOW}         GZDoom for Linux               ${NC}"
 echo -e "${RED}========================================${NC}"
 echo -e "${CYAN} Thanks for installing! Let's get it. Hit Enter to continue:${NC}"
 read -p ""
 
-
-# --- Check if they actually read the README ---
-if ! command -v gzdoom &> /dev/null && ! command -v zandronum &> &>/dev/null && ! command -v zdoom &> /dev/null; then
-    echo -e "${YELLOW}You didn't read the README, i'm gonna toouch your dih, here, pick one:${NC}"
+# --- Check for engine ---
+if ! command -v gzdoom &> /dev/null && ! command -v zandronum &> /dev/null && ! command -v zdoom &> /dev/null; then
+    echo -e "${YELLOW}You didn't read the README, you total noob. Here, pick one:${NC}"
     echo -e "1) ${GREEN}GZDoom${NC} (Standard, for decent PCs)"
     echo -e "2) ${PURPLE}ZDoom${NC} (For potato/old-school PCs)"
     echo -e "3) ${BLUE}Zandronum${NC} (If you wanna play Online)"
@@ -89,17 +88,23 @@ if ! command -v gzdoom &> /dev/null && ! command -v zandronum &> &>/dev/null && 
     esac
 fi
 
-# Set the engine to use
-if command -v gzdoom &> /dev/null; then ENGINE="gzdoom";
-elif command -v zandronum &> /dev/null; then ENGINE="zandronum";
-else ENGINE="zdoom"; fi
+# --- SET THE ENGINE ---
+if command -v gzdoom &> /dev/null; then
+    ENGINE="gzdoom"
+elif command -v zandronum &> /dev/null; then
+    ENGINE="zandronum"
+elif command -v zdoom &> /dev/null; then
+    ENGINE="zdoom"
+else
+    echo -e "${RED}Error: No engine found!${NC}"
+    exit 1
+fi
 
 echo -e "${GREEN}Get your custom MODS and WADS here:${NC}"
 echo -e "${BLUE}>> ModDB: ${NC}https://www.moddb.com/games/doom/mods"
 echo -e "${PURPLE}No WADs? No problem. You'll be running Freedoom by default.${NC}"
 echo -e "${RED}========================================${NC}"
 echo ""
-
 sleep 1
 
 # 1. WAD PICKER
@@ -110,11 +115,10 @@ mapfile -t IWAD_LIST < <(ls *.wad 2>/dev/null)
 
 if [ ${#IWAD_LIST[@]} -eq 0 ]; then
     echo -e "${RED}No WADs found in $IWAD_DIR.${NC}"
-    echo "Drop your WADS in the folder or make sure Freedoom installed correctly"
+    echo "Drop your WADS in the folder or check your Freedoom installation."
     exit 1
 fi
 
-# Selection prompt
 PS3=$(echo -e "${CYAN}Choose your fate (number): ${NC}")
 select WAD in "${IWAD_LIST[@]}" "EXIT"; do
     if [ "$WAD" == "EXIT" ]; then exit; fi
@@ -152,5 +156,7 @@ for INDEX in "${CHOICES[@]}"; do
 done
 
 # 4. RUN THE GAME
-echo -e "${RED}Rip and tear, bradar${NC}"
+echo -e "\n${RED}Rip and tear, brother.${NC}"
+
+# Using the detected engine variable
 $ENGINE -iwad "$IWAD_DIR/$WAD" $SELECTED_MODS_PARAMS
