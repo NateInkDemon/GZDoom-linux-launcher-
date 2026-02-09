@@ -1,0 +1,13 @@
+GZDoom for Linux
+
+This script works on pretty much any Linux distro as long as you've got an internet connection. If you don't, you're fucked man wth
+
+You **MUST** have GZDoom (or a similar engine) for this to work. If you're missing it, quit being a noob and grab it from the terminal:
+
+* **Arch (btw):** `sudo pacman -S gzdoom`
+* **Fedora:** `sudo dnf install gzdoom`
+* **Ubuntu (or any Debian-based distro):** `sudo apt install gzdoom`
+
+If you aren't exactly a terminal wizard, you're probably better off just downloading it from the official website like a normal person.
+
+Check out my YouTube tutorial to see how to configure it:
