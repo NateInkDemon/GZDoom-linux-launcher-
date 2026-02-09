@@ -19,7 +19,7 @@ mkdir -p "$IWAD_DIR" "$MODS_DIR"
 
 clear
 
-# --- Ver si exsten WADS, si no, descargar Freedoom ---
+# --- Ver si existen WADS, si no, descargar Freedoom ---
 if [ ! "$(ls -A $IWAD_DIR/*.wad 2>/dev/null)" ]; then
     echo -e "${YELLOW}No se detectaron WADs. ¿Quieres descargar Freedoom? (s/n)${NC}"
     read -r respuesta
@@ -46,26 +46,25 @@ if [ ! "$(ls -A $IWAD_DIR/*.wad 2>/dev/null)" ]; then
                     ln -sf /usr/share/games/doom/freedoom*.wad "$IWAD_DIR/"
                     ;;
                 *)
-                    echo -e "${RED}Usas una distro que no usa ni Linus Torvald${NC}"
+                    echo -e "${RED}Usas una distro que no usa ni Linus Torvalds${NC}"
                     echo "Intentando descarga manual desde github..."
                     curl -L https://github.com/freedoom/freedoom/releases/download/v0.13.0/freedoom-0.13.0.zip -o fd.zip
                     unzip -j fd.zip "*.wad" -d "$IWAD_DIR/" && rm fd.zip
                     ;;
             esac
-            echo -e "${GREEN}Freedoom se ha descargado, si no lo hizo y te dio error, descargalo de google y ponlo en la carpeta que le corresponde${NC}"
+            echo -e "${GREEN}Proceso de Freedoom finalizado.${NC}"
         fi
     fi
 fi
 
 # --- MENSAJE DE BIENVENIDA ---
 echo -e "${RED}========================================${NC}"
-echo -e "${YELLOW}        GZDoom for Linux               ${NC}"
+echo -e "${YELLOW}         GZDoom for Linux               ${NC}"
 echo -e "${RED}========================================${NC}"
 echo -e "${CYAN} Gracias por instalarlo, vamo a dale, presiona enter para continuar:${NC}"
 read -p ""
 
-
-# --- Aver si leyeron el Leeme ---
+# --- Ver si tienen el motor instalado ---
 if ! command -v gzdoom &> /dev/null && ! command -v zandronum &> /dev/null && ! command -v zdoom &> /dev/null; then
     echo -e "${YELLOW}No leiste el leeme, sos un bobolongo aqui tenes:${NC}"
     echo -e "1) ${GREEN}GZDoom${NC} (El estándar, PC buena)"
@@ -89,16 +88,23 @@ if ! command -v gzdoom &> /dev/null && ! command -v zandronum &> /dev/null && ! 
     esac
 fi
 
-# Definir cuál motor usar para el resto del script
-if command -v gzdoom &> /dev/null; then ENGINE="gzdoom";
-elif command -v zandronum &> /dev/null; then ENGINE="zandronum";
+# --- DEFINIR MOTOR A USAR ---
+if command -v gzdoom &> /dev/null; then 
+    ENGINE="gzdoom"
+elif command -v zandronum &> /dev/null; then 
+    ENGINE="zandronum"
+elif command -v zdoom &> /dev/null; then
+    ENGINE="zdoom"
+else
+    echo -e "${RED}Error: No se encontró ningún motor instalado.${NC}"
+    exit 1
+fi
 
 echo -e "${GREEN}Descarga tus MODS y WADS aquí:${NC}"
 echo -e "${BLUE}>> ModDB: ${NC}https://www.moddb.com/games/doom/mods"
 echo -e "${PURPLE}Si aún no tienes tus wads, estarás usando Freedoom por defecto${NC}"
 echo -e "${RED}========================================${NC}"
 echo ""
-
 sleep 1
 
 # 1. SELECCIONADOR DE TUS WADS
@@ -109,11 +115,10 @@ mapfile -t IWAD_LIST < <(ls *.wad 2>/dev/null)
 
 if [ ${#IWAD_LIST[@]} -eq 0 ]; then
     echo -e "${RED}No se encontraron WADs en $IWAD_DIR.${NC}"
-    echo "Pon tus wads en su carpeta correspondiente o revisa que Freedoom este en su carpeta"
+    echo "Pon tus wads en la carpeta o revisa que Freedoom esté ahí."
     exit 1
 fi
 
-# Personalización del prompt de selección
 PS3=$(echo -e "${CYAN}Elige tu destino (número): ${NC}")
 select WAD in "${IWAD_LIST[@]}" "SALIR"; do
     if [ "$WAD" == "SALIR" ]; then exit; fi
@@ -152,5 +157,7 @@ done
 
 # 4. EJECUTAR EL JUEGO
 echo ""
-echo -e "${RED}Mata y desgarra,compañero${NC}"
-gzdoom -iwad "$IWAD_DIR/$WAD" $SELECTED_MODS_PARAMS
+echo -e "${RED}Mata y desgarra, compañero${NC}"
+
+# Aquí usamos la variable ENGINE que detectamos antes
+$ENGINE -iwad "$IWAD_DIR/$WAD" $SELECTED_MODS_PARAMS
