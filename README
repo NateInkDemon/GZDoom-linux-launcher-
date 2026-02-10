@@ -8,6 +8,6 @@ Arch (btw):sudo pacman -S gzdoom
 Fedora:sudo dnf install gzdoom
 Ubuntu (or any Debian-based distro):sudo apt install gzdoom
 
-If you aren't exactly a terminal wizard, you're probably better off just downloading it from the official website like a normal person.
+If you aren't exactly a terminal wizard, the script can install you the engine so don't i got you
 
 Check out my YouTube tutorial to see how to configure it: it will coming soon,dont worry, SPOILER ALERT: WILL JUST BE IN SPANISH BECAUSE I SPEAK SPANISH
