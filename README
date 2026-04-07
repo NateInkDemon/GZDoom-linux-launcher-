@@ -4,9 +4,9 @@ This script works on pretty much any Linux distro as long as you've got an inter
 
 You must have GZDoom (or a similar engine) for this to work. If you're missing it, quit being a noob and grab it from the terminal:
 
-Arch (btw):sudo pacman -S gzdoom
-Fedora:sudo dnf install gzdoom
-Ubuntu (or any Debian-based distro):sudo apt install gzdoom
+Arch (btw):sudo pacman -S uzdoom
+Fedora:sudo dnf install uzdoom
+Ubuntu (or any Debian-based distro):sudo apt install uzdoom
 
 If you aren't exactly a terminal wizard, the script can install you the engine so don't i got you
 
