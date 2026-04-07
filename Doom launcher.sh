@@ -90,11 +90,11 @@ fi
 
 # --- SET THE ENGINE ---
 if command -v gzdoom &> /dev/null; then
-    ENGINE="gzdoom"
+    ENGINE="uzdoom"
 elif command -v zandronum &> /dev/null; then
     ENGINE="zandronum"
 elif command -v zdoom &> /dev/null; then
-    ENGINE="zdoom"
+    ENGINE="uzdoom"
 else
     echo -e "${RED}Error: No engine found!${NC}"
     exit 1
